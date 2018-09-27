@@ -1,14 +1,14 @@
 import java.io.*;
 import java.net.*;
 
-public static class Network {
+public class Network {
 	
 	public static void Host(int port) throws IOException{
 	
 		try (//Temporary Resources
 		
 			//Server Socket
-			ServerSocket serverSocket = new ServerSocket(port));
+			ServerSocket serverSocket = new ServerSocket(port);
 			
 			//Listen for client
 			Socket clientSocket = serverSocket.accept(); 
@@ -18,26 +18,63 @@ public static class Network {
 			
 			//Object for reading in
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		) {
 			
-			//Read Input from socket
-			String inputLine;
-			while ((inputLine = in.readLine()) != null) {
-				//Echo response
-				out.println(inputLine);
+			//Input from User
+            BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))
+		) {
+			 
+			Thread server = new Thread(){
+				public void run(){
+					
+					try{
+						String inputLine;
+						//Read input from socket
+						while ((inputLine = in.readLine()) != null) {
+							if(inputLine.equals("quit")){
+								System.out.println("User has quit. Ending host.");
+								break;
+							}
+							System.out.println(inputLine);
+							//Echo response
+							out.println(inputLine);
+					}
+					}catch(IOException e){
+						System.out.println(e);
+					}
+				}
+			};
+			server.start();
+			
+			String userInput;
+			while((userInput = stdIn.readLine()) != null){
+				
+				out.println(userInput);
+				if(userInput.equals("quit")){
+					server.stop();
+					break;
+				}
+				
 			}
+			
+
 		}
 		 catch (IOException e) {
 			System.out.println("Exception caught when trying to listen on port "
-				+ portNumber + " or listening for a connection");
+				+ port + " or listening for a connection");
 			System.out.println(e.getMessage());
 		}
     
 	}
 	
 	
+
 	
-	public static Client(String host, int port) throws IOException{
+	
+	
+	
+	
+	
+	public static void Client(String host, int port) throws IOException{
 		
 
         try (//Resources
@@ -55,20 +92,43 @@ public static class Network {
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))
         ) {
 			
+			Thread printFromServer = new Thread(){
+				public void run(){
+					try{
+						while((in.readLine()) != null){
+							//Read response
+							System.out.println("Host: " + in.readLine());
+						}
+					}catch(IOException e){
+						//TODO
+					}
+				}
+			};
+			printFromServer.start();
+			
+
+			
+			
 			//USER INPUT
-            String userInput;
-            while ((userInput = stdIn.readLine()) != null) {
+			String userInput;
+			while ((userInput = stdIn.readLine()) != null) {
 				//Send Input to socket
-                out.println(userInput);
-				//Read response
-                System.out.println("echo: " + in.readLine());
-            }
+				out.println(userInput);
+				
+				//Exit
+				if(userInput.equals("quit"))
+					break;
+			}
+
+			
+			
+
         } catch (UnknownHostException e) {
-            System.err.println("Don't know about host " + hostName);
+            System.err.println("Don't know about host " + host);
             System.exit(1);
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to " +
-                hostName);
+                host);
             System.exit(1);
         } 
     }
