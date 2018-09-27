@@ -9,23 +9,24 @@ import java.awt.event.ActionListener;
 //This class acts as the frame for the game
 public class GameFrame extends JFrame {
 	
+	JPanel initPane = new JPanel();
+	JButton host = new JButton("Host Game");
+	JPanel temp = new JPanel();
+	JButton join = new JButton("Join Game");
+	TxtHorzBoxLabel joinIP = new TxtHorzBoxLabel("TCP/IP", 14);
+	JButton quit = new JButton("Quit Game");
+	
 	//constructor
 	GameFrame() {
 		build();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(360, 220);
+		pack();
 		setTitle("Guess Who");
 		setVisible(true);
 	}
 
 	//builds the initial frame
 	private void build() {
-		JPanel initPane = new JPanel();
-		JButton host = new JButton("Host Game");
-		JPanel temp = new JPanel();
-		JButton join = new JButton("Join Game");
-		TxtHorzBoxLabel joinIP = new TxtHorzBoxLabel("TCP/IP", 14);
-		JButton quit = new JButton("Quit Game");
 		GridBagConstraints c = new GridBagConstraints();
 		
 		join.setPreferredSize(new Dimension(340,25));
@@ -42,6 +43,10 @@ public class GameFrame extends JFrame {
 		initPane.add(temp, BorderLayout.CENTER);
 		initPane.add(quit, BorderLayout.SOUTH);
 		
+		host.addActionListener(new ActionListen());
+		join.addActionListener(new ActionListen());
+		quit.addActionListener(new ActionListen());
+		
 		add(initPane);
 	}	
 	
@@ -53,7 +58,18 @@ public class GameFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource().equals(host)) {
+				System.out.println("This is the host!");
+			}
+			
+			if(e.getSource().equals(join)) {
+				System.out.println("This is the join!");
+				System.out.println(joinIP.getFieldText()); 
+			}
+			
+			if(e.getSource().equals(quit)) {
+				System.exit(0);
+			}
 			
 		}
 		
