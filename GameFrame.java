@@ -59,12 +59,19 @@ public class GameFrame extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource().equals(host)) {
-				System.out.println("This is the host!");
+				try{
+					Network.Host(5974);
+				}catch(Exception ex){
+					
+				}
 			}
 			
 			if(e.getSource().equals(join)) {
-				System.out.println("This is the join!");
-				System.out.println(joinIP.getFieldText()); 
+				try{
+					Network.Client(joinIP.getFieldText(), 5974);
+				}catch(Exception ex){
+					
+				}
 			}
 			
 			if(e.getSource().equals(quit)) {
@@ -75,5 +82,4 @@ public class GameFrame extends JFrame {
 		
 	}
 }
-
 
