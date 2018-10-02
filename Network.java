@@ -27,16 +27,15 @@ public class Network {
 				public void run(){
 					
 					try{
-						String inputLine;
+						String receiveString;
 						//Read input from socket
-						while ((inputLine = in.readLine()) != null) {
-							if(inputLine.equals("quit")){
+						while ((receiveString = in.readLine()) != null) {
+							if(receiveString.equals("quit")){
 								System.out.println("User has quit. Ending host.");
 								break;
 							}
-							System.out.println(inputLine);
-							//Echo response
-							out.println(inputLine);
+							System.out.println(receiveString);
+							
 					}
 					}catch(IOException e){
 						System.out.println(e);
@@ -92,19 +91,20 @@ public class Network {
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))
         ) {
 			
-			Thread printFromServer = new Thread(){
+			Thread server = new Thread(){
 				public void run(){
 					try{
-						while((in.readLine()) != null){
+						String receiveString;
+						while((receiveString = in.readLine()) != null){
 							//Read response
-							System.out.println("Host: " + in.readLine());
+							System.out.println("Host: " + receiveString);
 						}
 					}catch(IOException e){
 						//TODO
 					}
 				}
 			};
-			printFromServer.start();
+			server.start();
 			
 
 			
